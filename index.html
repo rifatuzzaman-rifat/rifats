@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rifat - Portfolio</title>
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <!-- Google Fonts for Typography -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap">
+  <!-- GSAP for Animations -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <style>
+    
+    html{
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Courier New', monospace;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    #circuit-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      padding: 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Navbar with Logo */
+    .navbar {
+      position: sticky;
+      top: 0;
+      background: #151515;
+      padding: 10px 20px;
+      border-bottom: 1px solid #00ff9d;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 2rem;
+      color: #00eaff;
+      text-shadow: 0 0 10px #00eaff, 0 0 20px #00ff9d;
+    }
+
+    .logo span {
+      display: inline-block;
+    }
+
+    .menu-toggle {
+      font-size: 1.5rem;
+      color: #00ff9d;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .menu-toggle:hover {
+      color: #00eaff;
+      text-shadow: 0 0 10px #00eaff;
+    }
+
+    /* Side Menu */
+    .side-menu {
+      position: fixed;
+      top: 0;
+      left: -250px;
+      width: 200px;
+      height: 100%;
+      background: #151515;
+      border-right: 1px solid #00ff9d;
+      padding: 50px 15px 15px;
+      z-index: 20;
+      transition: left 0.3s ease;
+      box-shadow: none;
+      overflow: hidden;
+    }
+
+    .side-menu.active {
+      left: 0;
+    }
+
+    .side-menu a {
+      color: #00eaff;
+      text-decoration: none;
+      display: block;
+      margin: 15px 0;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      font-size: 1rem;
+      transition: color 0.3s;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .side-menu a i {
+      margin-right: 8px;
+      font-size: 1rem;
+    }
+
+    .side-menu a:hover {
+      color: #00ff9d;
+      text-shadow: 0 0 10px #00ff9d;
+    }
+
+    /* Intro Section */
+    .intro {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(45deg, rgba(10, 52, 52, 0.8), rgba(0, 77, 64, 0.8));
+      border-bottom: 2px solid #00eaff;
+    }
+
+    .intro img {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      border: 3px solid #00ff9d;
+      box-shadow: 0 0 20px #00ff9d, 0 0 30px #00eaff;
+      margin-bottom: 20px;
+      object-fit: cover;
+    }
+
+    .intro h1 {
+      font-size: 4.5rem;
+      color: #00eaff;
+      text-shadow: 0 0 15px #00eaff, 0 0 30px #00ff9d;
+      font-family: 'Orbitron', monospace;
+      animation: flicker 3s infinite alternate, glitch 0.5s infinite;
+    }
+
+    .intro p {
+      font-size: 1.8rem;
+      color: #d0d0d0;
+      margin: 20px 0;
+      max-width: 600px;
+      text-shadow: 0 0 5px #00eaff;
+    }
+
+    .btn {
+      padding: 12px 30px;
+      background: #00ff9d;
+      color: #0a0a0a;
+      text-decoration: none;
+      border-radius: 50px;
+      font-weight: bold;
+      box-shadow: 0 0 15px #00ff9d;
+      transition: all 0.3s;
+    }
+
+    .btn:hover {
+      background: #00cc7a;
+      box-shadow: 0 0 25px #00ff9d;
+    }
+
+    /* About Section */
+    .about {
+      padding: 80px 0;
+    }
+
+    #terminal-text {
+      color: #00ff9d;
+      font-size: 1.4rem;
+      margin-bottom: 30px;
+      text-align: center;
+      white-space: pre-wrap;
+      text-shadow: 0 0 10px #00ff9d;
+    }
+
+    .about p {
+      max-width: 700px;
+      margin: 0 auto;
+      font-size: 1.2rem;
+      color: #d0d0d0;
+    }
+
+    .about a {
+      color: #00eaff;
+      text-decoration: none;
+    }
+
+    .about a:hover {
+      text-decoration: underline;
+    }
+
+    /* Projects Section */
+    .projects {
+      padding: 80px 0;
+    }
+
+    .projects h2, .skills h2, .education h2, .achievements h2, .contact h2 {
+      font-size: 3rem;
+      color: #00eaff;
+      text-align: center;
+      margin-bottom: 50px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 0 10px #00eaff;
+      font-family: 'Orbitron', monospace;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+
+    .project-card {
+      background: #151515;
+      padding: 25px;
+      border-radius: 15px;
+      border: 2px solid #00ff9d;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .project-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 0 30px #00ff9d;
+    }
+
+    .project-card img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #00eaff;
+      loading: lazy;
+    }
+
+    .project-card h3 {
+      color: #00ff9d;
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+      font-family: 'Orbitron', monospace;
+    }
+
+    .project-card p {
+      color: #a0a0a0;
+      font-size: 1.1rem;
+    }
+
+    .project-card .stack {
+      color: #666;
+      font-size: 0.9rem;
+      margin: 10px 0;
+    }
+
+    .project-card a {
+      color: #00eaff;
+      text-decoration: none;
+      margin: 0 10px;
+      font-weight: bold;
+    }
+
+    .project-card a:hover {
+      text-decoration: underline;
+      color: #00ccff;
+    }
+
+    /* Skills Section */
+    .skills {
+      padding: 80px 0;
+      background: #101010;
+    }
+
+    .skills-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .skill-item {
+      background: #1a1a1a;
+      padding: 15px 25px;
+      border-radius: 10px;
+      color: #00ff9d;
+      font-size: 1.2rem;
+      box-shadow: 0 0 10px #00ff9d;
+      transition: transform 0.3s;
+    }
+
+    .skill-item:hover {
+      transform: scale(1.1);
+    }
+
+    /* Education Section */
+    .education {
+      padding: 80px 0;
+    }
+
+    .education-item {
+      background: #151515;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #00eaff;
+    }
+
+    .education-item h3 {
+      color: #00ff9d;
+      font-size: 1.6rem;
+      font-family: 'Orbitron', monospace;
+    }
+
+    .education-item p {
+      color: #a0a0a0;
+      font-size: 1.1rem;
+    }
+
+    /* Achievements Section */
+    .achievements {
+      padding: 80px 0;
+      background: #101010;
+    }
+
+    .achievement-item {
+      background: #151515;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      border: 1px solid #00ff9d;
+    }
+
+    .achievement-item h3 {
+      color: #00ff9d;
+      font-size: 1.6rem;
+      font-family: 'Orbitron', monospace;
+    }
+
+    .achievement-item p {
+      color: #a0a0a0;
+      font-size: 1.1rem;
+    }
+
+    /* Contact Section */
+    .contact {
+      padding: 80px 0;
+    }
+    
+    .social-links {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin-bottom: 20px;
+    }
+    
+    .social-links a {
+      color: #00eaff;
+      font-size: 1.5rem;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    
+    .social-links a:hover {
+      color: #00ff9d;
+      text-shadow: 0 0 10px #00ff9d;
+    }
+    
+    #contact-form {
+      max-width: 500px;
+      margin: 20px auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    
+    #contact-form input,
+    #contact-form textarea {
+      background: #151515;
+      border: 1px solid #00eaff;
+      padding: 10px;
+      color: #e0e0e0;
+      font-family: 'Fira Code', monospace;
+      border-radius: 5px;
+    }
+    
+    #contact-form textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+    /* Copyright Section */
+    .copyright {
+      text-align: center;
+      padding: 5px;
+      background: #151515;
+      border-top: 1px solid #00eaff;
+      font-size: 1rem;
+      color: #E2E2E2;
+    }
+
+    /* Animations */
+    @keyframes flicker {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.8; }
+    }
+
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(2px, -2px); }
+      60% { transform: translate(-2px, -2px); }
+      80% { transform: translate(2px, 2px); }
+      100% { transform: translate(0); }
+    }
+
+    /* Custom Cursor */
+    body {
+      cursor: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      width: 12px;
+      height: 12px;
+      background: #00ff9d;
+      border-radius: 50%;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      z-index: 9999;
+      animation: cursorPulse 1s infinite;
+      left: var(--mouse-x);
+      top: var(--mouse-y);
+    }
+
+    @keyframes cursorPulse {
+      0% { box-shadow: 0 0 5px #00ff9d; }
+      50% { box-shadow: 0 0 25px #00ff9d; }
+      100% { box-shadow: 0 0 5px #00ff9d; }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .intro img { width: 150px; height: 150px; }
+      .intro h1 { font-size: 3rem; }
+      .intro p { font-size: 1.4rem; }
+      .navbar { padding: 8px 15px; }
+      .side-menu { width: 180px; }
+      .project-grid { grid-template-columns: 1fr; gap: 20px; }
+      .projects h2, .skills h2, .education h2, .achievements h2, .contact h2 { font-size: 2.5rem; }
+      .project-card img { height: 120px; }
+    }
+
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .project-grid { grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 25px; }
+      .side-menu { width: 220px; }
+    }
+
+    /* Button Slider Animation */
+    .btn {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 255, 157, 0.3);
+      transition: left 0.5s ease;
+    }
+
+    .btn:hover::after {
+      left: 0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Circuit Canvas Background -->
+  <div id="circuit-canvas"></div>
+
+  <!-- Navbar with Logo -->
+  <nav class="navbar">
+    <div class="logo">
+      <span>R</span><span>i</span><span>f</span><span>a</span><span>t</span>
+    </div>
+    <div class="menu-toggle">
+      <i class="fas fa-bars"></i>
+    </div>
+  </nav>
+
+  <!-- Side Menu -->
+  <div class="side-menu">
+    <a href="#intro"><i class="fas fa-home"></i>Home</a>
+    <a href="#about"><i class="fas fa-user"></i>About</a>
+    <a href="#projects"><i class="fas fa-folder-open"></i>Projects</a>
+    <a href="#skills"><i class="fas fa-tools"></i>Skills</a>
+    <a href="#education"><i class="fas fa-graduation-cap"></i>Education</a>
+    <a href="#achievements"><i class="fas fa-trophy"></i>Achievements</a>
+    <a href="#contact"><i class="fas fa-envelope"></i>Contact</a>
+  </div>
+
+  <!-- Main Content -->
+  <div class="container">
+    <!-- Intro Section -->
+    <section id="intro" class="intro">
+      <img src="/1737257467018.jpg" alt="Rifat's Profile Picture">
+      <h1>Hey, I’m Rifat</h1>
+      <p>Circuit wizard, code alchemist, and explorer of math and physics mysteries.</p>
+      <a href="#projects" class="btn">Dive Into My Universe</a>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+      <h2>About Me</h2>
+      <p id="terminal-text">></p>
+      <p>
+        I’m Rifat, a bachelor student obsessed with circuits, coding, and the elegance of math and physics. 
+        From untangling circuit mazes to simulating cosmic dances, I thrive on crafting solutions that spark curiosity. 
+        Check out my work on <a href="https://github.com/rifatuzzaman-rifat" target="_blank">GitHub</a> and 
+        <a href="https://vercel.com/rifatuzzaman-rifat-s-projects" target="_blank">Vercel</a>!
+      </p>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects">
+      <h2>Projects</h2>
+      <div class="project-grid">
+        <div class="project-card">
+          <img src="snakegamepreview.jpg" alt="Snake Game Preview" loading="lazy">
+          <h3>Snake Game</h3>
+          <p>A fun and nostalgic clone of Nokia Snake Game.</p>
+          <p class="stack">Stack: HTML, CSS, JS, Bootstrap</p>
+          <a href="https://github.com/rifatuzzaman-rifat/snake" target="_blank">Code</a>
+          <a href="https://rifatuzzaman-rifat.github.io/snake/" target="_blank">
+            Live
+          </a>
+        </div>
+        <div class="project-card">
+          <img src="prettymoonpreview.jpg" alt="Pretty Moon Preview" loading="lazy">
+          <h3>Pretty Moon</h3>
+          <p>A simple photo based web that compares our frienships.</p>
+          <p class="stack">Stack:HTML, CSS, SCSS, JavaScript, p5.js</p>
+          <a href="https://github.com/rifatuzzaman-rifat/pretty_moon" target="_blank">Code</a>
+          <a href="https://prettymoon.netlify.app" target="_blank">Live</a>
+        </div>
+        <div class="project-card">
+          <img src="https://images.unsplash.com/photo-1509228627910-7d9a153b848e?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&h=150" alt="Math Puzzle Solver Preview" loading="lazy">
+          <h3>Math Puzzle Solver</h3>
+          <p>An algorithm to crack complex math puzzles efficiently.</p>
+          <p class="stack">Stack: Python, SymPy</p>
+          <a href="https://github.com/andrewnijmeh" target="_blank">Code</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="skills">
+      <h2>Skills</h2>
+      <div class="skills-grid">
+        <div class="skill-item">Circuit Analysis</div>
+        <div class="skill-item">Python</div>
+        <div class="skill-item">JavaScript</div>
+        <div class="skill-item">MATLAB</div>
+        <div class="skill-item">Physics Simulations</div>
+        <div class="skill-item">Mathematics</div>
+      </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="education">
+      <h2>Education</h2>
+      <div class="education-item">
+        <h3>Bachelor of Science in Mechanical Engineering</h3>
+        <p>Chittagong University of Science and Technology - 2025-Present</p>
+        <p>Focusing on machine design, programming, and applied physics.</p>
+      </div>
+      <div class="education-item">
+        <h3>Higher Secondary Certificate (HSC)</h3>
+        <p>Alamgir Monsur Memorial college - 2023-2024</p>
+      </div>
+      <div class="education-item">
+        <h3>Secondary School Certificate (SSC)</h3>
+        <p>Mohanganj Adarsha High School - 2018-2023</p>
+      </div>
+    </section>
+
+    <!-- Achievements Section -->
+    <section id="achievements" class="achievements">
+      <h2>Achievements</h2>
+      <div class="achievement-item">
+        <h3>1st Runners-up at Mymensingh Regional BdMO-2024</h3>
+        <p>Participated in National round.</p>
+      </div>
+      <div class="achievement-item">
+        <h3>1st in Divisional Quiz</h3>
+        <p>Got my team first in science related quiz exam </p>
+      </div>
+    </section>
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+      <h2>Contact Me</h2>
+      <div class="social-links">
+        <a href="https://github.com/rifatuzzaman-rifat" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        <a href="https://www.facebook.com/iamriifaaat" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+        <a href="https://instagram.com/iamriifaaat" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+      </div>
+      <form id="contact-form" action="https://formspree.io/f/manqrenw" method="POST">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <textarea name="message" placeholder="Message" required></textarea>
+        <button type="submit" class="btn">Send</button>
+      </form>
+    </section>
+  </div>
+
+
+    <!-- Contact Section 
+    <section id="contact" class="contact">
+      <h2>Contact Me</h2>
+      <div class="social-links">
+        <a href="https://github.com/andrewnijmeh" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+        <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook"></i> Facebook</a>
+        <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i> Instagram</a>
+      </div>
+    </section>
+  </div>
+-->
+  <!-- Copyright Section -->
+  <footer class="copyright">
+    <p>© 2025 Rifat. All rights reserved.</p>
+  </footer>
+
+  <!-- p5.js and Custom Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.2/p5.min.js"></script>
+  <script>
+    // Circuit Animation with p5.js (Interactive and Refined)
+    let circuitCanvas;
+    let nodes = [];
+
+    function setup() {
+      circuitCanvas = createCanvas(windowWidth, windowHeight);
+      circuitCanvas.parent('circuit-canvas');
+      background(0);
+    }
+
+    function draw() {
+      clear();
+      stroke(0, 255, 200, 200);
+      strokeWeight(3);
+      for (let i = 0; i < nodes.length; i++) {
+        // Draw nodes with pulsing effect
+        fill(0, 255, 200, random(200, 255));
+        ellipse(nodes[i].x, nodes[i].y, nodes[i].r, nodes[i].r);
+        // Connect nodes with lines
+        if (i < nodes.length - 1) {
+          line(nodes[i].x, nodes[i].y, nodes[i + 1].x, nodes[i + 1].y);
+        }
+        // Occasional sparks (random lines)
+        if (random(1) < 0.05) {
+          let sparkX = random(width);
+          let sparkY = random(height);
+          line(nodes[i].x, nodes[i].y, sparkX, sparkY);
+        }
+      }
+      frameRate(5); // Slow animation
+    }
+
+    function mouseClicked() {
+      // Add node where clicked
+      nodes.push({ x: mouseX, y: mouseY, r: 8 });
+      if (nodes.length > 50) nodes.shift(); // Limit nodes to prevent lag
+    }
+
+    function windowResized() {
+      resizeCanvas(windowWidth, windowHeight);
+      background(0);
+    }
+
+    // Terminal Typing Effect
+    const terminalText = "Rifat. Circuit master. Code crafter. Math + physics explorer.";
+    let i = 0;
+    const terminalElement = document.getElementById('terminal-text');
+
+    function typeText() {
+      if (i < terminalText.length) {
+        terminalElement.textContent = "> " + terminalText.slice(0, i + 1);
+        i++;
+        setTimeout(typeText, 80);
+      }
+    }
+    setTimeout(typeText, 500);
+
+    // Custom Cursor Movement
+    document.addEventListener('mousemove', (e) => {
+      document.body.style.setProperty('--mouse-x', `${e.clientX}px`);
+      document.body.style.setProperty('--mouse-y', `${e.clientY}px`);
+    });
+
+    document.body.style.setProperty('--mouse-x', '0px');
+    document.body.style.setProperty('--mouse-y', '0px');
+
+    // GSAP Animations
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Logo Animation
+    gsap.from(".logo span", {
+      opacity: 0,
+      y: 20,
+      duration: 0.5,
+      stagger: 0.1,
+      ease: "power2.out",
+      repeat: -1,
+      repeatDelay: 2
+    });
+
+    // Side Menu Toggle and Auto-Close
+    const menuToggle = document.querySelector('.menu-toggle');
+    const sideMenu = document.querySelector('.side-menu');
+    const menuLinks = document.querySelectorAll('.side-menu a');
+
+    menuToggle.addEventListener('click', () => {
+      sideMenu.classList.toggle('active');
+      gsap.to(sideMenu, {
+        left: sideMenu.classList.contains('active') ? 0 : -250,
+        duration: 0.5,
+        ease: "power2.inOut"
+      });
+    });
+
+    menuLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        sideMenu.classList.remove('active');
+        gsap.to(sideMenu, {
+          left: -250,
+          duration: 0.5,
+          ease: "power2.inOut"
+        });
+      });
+    });
+
+    // Section Slide-in Animations
+    gsap.utils.toArray("section").forEach(section => {
+      gsap.from(section, {
+        scrollTrigger: {
+          trigger: section,
+          start: "top 80%",
+          toggleActions: "play none none none"
+        },
+        x: -100,
+        opacity: 0,
+        duration: 1,
+        ease: "power2.out"
+      });
+    });
+
+    // Button Slider Animation
+    const btn = document.querySelector('.btn');
+    btn.addEventListener('mouseenter', () => {
+      gsap.to(btn, {
+        x: 20, // Slide right by 20px
+        duration: 0.5,
+        ease: "power2.out"
+      });
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      gsap.to(btn, {
+        x: 0, // Return to original position
+        duration: 0.5,
+        ease: "power2.out"
+      });
+    });
+  </script>
+</body>
+</html>
